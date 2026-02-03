@@ -38,7 +38,7 @@ To start the game, simply type `python app.py` into the terminal. Open `players.
 
 
 <img
-  src="/src/assets/images/imposter.png"
+  src="/assets/images/imposter.png"
   alt="CAM"
   class="border-0 shadow-none"
   style="width: 70%"

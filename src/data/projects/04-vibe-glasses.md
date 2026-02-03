@@ -32,7 +32,7 @@ For the prototype, I used an ESP32-CAM, a development board with Wi-Fi and Bluet
 
 <figure>
   <img
-    src="/src/assets/images/camera.png"
+    src="/assets/images/camera.png"
     alt="CAM"
     class="border-0 shadow-none"
     style="width: 70%"
@@ -50,7 +50,7 @@ The chosen song/genre is then checked against the currently playing Spotify trac
 
 <figure style="display: flex; flex-direction: column; align-items: center; margin: 0;">
   <video controls style="width: 70%; display: block; margin: 0 auto;">
-    <source src="/src/assets/videos/vibeglasses.mp4" type="video/mp4">
+    <source src="/assets/videos/vibeglasses.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
   <figcaption style="text-align: center; width: 100%;">Demo</figcaption>
@@ -59,7 +59,7 @@ The chosen song/genre is then checked against the currently playing Spotify trac
 
 <figure>
   <img
-    src="/src/assets/images/vibeglasses.png"
+    src="/assets/images/vibeglasses.png"
     alt="Vibe Glasses"
     class="border-0 shadow-none"
     style="width: 70%"

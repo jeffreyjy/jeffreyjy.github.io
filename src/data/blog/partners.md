@@ -16,7 +16,7 @@ I’m excited to announce that IRIX is officially partners with <a href="https:/
 
 <figure>
   <img
-    src="/src/assets/images/eveng2.png"
+    src="/assets/images/eveng2.png"
     alt="eveng2"
     class="border-0 shadow-none"
     style="width: 70%"

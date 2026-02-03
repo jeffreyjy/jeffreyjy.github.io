@@ -34,7 +34,7 @@ Check out some samples below:
 <figure>
     <figcaption style="text-align: center; width: 100%;">Real vs Generated Healthy Chest X-Rays</figcaption>
   <img
-    src="/src/assets/images/HEALTHY.png"
+    src="/assets/images/HEALTHY.png"
     alt="Real vs Generated Healthy Chest X-Rays"
     class="border-0 shadow-none"
   />
@@ -43,7 +43,7 @@ Check out some samples below:
 <figure>
     <figcaption style="text-align: center; width: 100%;">Real vs Generated Pneumonia Chest X-Rays</figcaption>
   <img
-    src="/src/assets/images/PNEUMONIA.png"
+    src="/assets/images/PNEUMONIA.png"
     alt="Real vs Generated Pneumonia Chest X-Rays"
     class="border-0 shadow-none"
   />

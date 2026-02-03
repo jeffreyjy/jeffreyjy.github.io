@@ -30,13 +30,13 @@ This project modifies self-attention to include relative attention, which weight
 
 The pianoroll visualizations below show generated sequences where relative attention enables the model to sustain musical structure across long contexts.
 <img
-  src="/src/assets/images/pianoroll1.png"
+  src="/assets/images/pianoroll1.png"
   alt="Generated sequence with relative attention - Example 1"
   class="border-0 shadow-none"
 />
 
 <img
-  src="/src/assets/images/pianoroll2.png"
+  src="/assets/images/pianoroll2.png"
   alt="Generated sequence with relative attention - Example 2"
   class="border-0 shadow-none"
 />
@@ -48,7 +48,7 @@ Take a listen to some generated samples!
 
 <figure>
   <audio controls>
-    <source src="/src/assets/audio/adventure.mp3" type="audio/mp3">
+    <source src="/assets/audio/adventure.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
   <figcaption>Call to Adventure</figcaption>
@@ -56,7 +56,7 @@ Take a listen to some generated samples!
 
 <figure>
   <audio controls>
-    <source src="/src/assets/audio/thriller.mp3" type="audio/mp3">
+    <source src="/assets/audio/thriller.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
   <figcaption>A Thrilling Melody</figcaption>
@@ -64,7 +64,7 @@ Take a listen to some generated samples!
 
 <figure>
   <audio controls>
-    <source src="/src/assets/audio/excitement.mp3" type="audio/mp3">
+    <source src="/assets/audio/excitement.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
   <figcaption>Waking Up</figcaption>
@@ -72,7 +72,7 @@ Take a listen to some generated samples!
 
 <figure>
   <audio controls>
-    <source src="/src/assets/audio/symbolic_conditioned.mp3" type="audio/mp3">
+    <source src="/assets/audio/symbolic_conditioned.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
   <figcaption>Four-Part Chorale</figcaption>
