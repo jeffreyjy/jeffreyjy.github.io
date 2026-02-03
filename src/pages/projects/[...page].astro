@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import Pagination from "@/components/Pagination.astro";
+import getSortedProjects from "@/utils/getSortedProjects";
+import { SITE } from "@/config";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const projects = await getCollection("projects", ({ data }) => !data.draft);
+  return paginate(getSortedProjects(projects), { pageSize: SITE.postPerPage });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<Layout title={`Projects | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Projects" pageDesc="Some Projects I've worked on.">
+    <ul>
+      {page.data.map(data => <ProjectCard {...data} />)}
+    </ul>
+  </Main>
+
+  <Pagination {page} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
+</Layout>
+

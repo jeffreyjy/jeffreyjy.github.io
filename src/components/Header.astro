@@ -72,10 +72,23 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
+          <a href="/" class:list={{ "active-nav": isActive("/") }}>
+            Home
+          </a>
+        </li>
+
+        <li class="col-span-2">
           <a href="/posts" class:list={{ "active-nav": isActive("/posts") }}>
             Posts
           </a>
         </li>
+
+        <li class="col-span-2">
+          <a href="/projects" class:list={{ "active-nav": isActive("/projects") }}>
+            Projects
+          </a>
+        </li>
+        <!--
         <li class="col-span-2">
           <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
             Tags
@@ -120,6 +133,7 @@ const isActive = (path: string) => {
             <span class="sr-only">Search</span>
           </LinkButton>
         </li>
+        -->
         {
           SITE.lightAndDarkMode && (
             <li class="col-span-1 flex items-center justify-center">

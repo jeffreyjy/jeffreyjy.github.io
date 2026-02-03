@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { slugifyStr } from "@/utils/slugify";
+import { getProjectPath } from "@/utils/getProjectPath";
+
+type Props = {
+  variant?: "h2" | "h3";
+} & CollectionEntry<"projects">;
+
+const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+
+const { title, description } = data;
+---
+
+<li class="my-6">
+  <a
+    href={getProjectPath(id, filePath)}
+    class:list={[
+      "inline-block text-lg font-medium text-accent",
+      "decoration-dashed underline-offset-4 hover:underline",
+      "focus-visible:no-underline focus-visible:underline-offset-0",
+    ]}
+  >
+    <Heading
+      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+    >
+      {title}
+    </Heading>
+  </a>
+  <p>{description}</p>
+</li>
+
