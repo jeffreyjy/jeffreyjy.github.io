@@ -4,7 +4,7 @@ export const SITE = {
   profile: "assets/images/pfp.jpeg",
   desc: "A personal website of Jeffrey Yang",
   title: "jeffrey yang",
-  ogImage: "astropaper-og.jpg",
+  ogImage: "",
   lightAndDarkMode: false,
   postPerIndex: 4,
   postPerPage: 4,
