@@ -49,7 +49,7 @@ The companion app is a small Flask webapp designed to run in the background. It 
 The chosen song/genre is then checked against the currently playing Spotify track (queried via the Spotify API using the user's OAuth access token). If the detected scene differs from the current track's scene, the backend automatically switches playback to the corresponding Spotify track on the user's active Spotify device.
 
 <figure style="display: flex; flex-direction: column; align-items: center; margin: 0;">
-  <video controls style="width: 70%; display: block; margin: 0 auto;">
+  <video controls volume="0.15" style="width: 70%; display: block; margin: 0 auto;">
     <source src="/assets/videos/vibeglasses.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
