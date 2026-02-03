@@ -8,7 +8,7 @@ tags:
   - react
   - typescript
 description: AI plays imposter.
-githubUrl: https://github.com/jeffreyjy/example-project
+githubUrl: https://github.com/jeffreyjy/imposter
 techStack:
   - python
   - openai
