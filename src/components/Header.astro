@@ -88,6 +88,17 @@ const isActive = (path: string) => {
             Projects
           </a>
         </li>
+
+        <li class="col-span-2">
+          <a
+            href="/assets/images/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class:list={{ "active-nav": isActive("/assets/images/resume.pdf") }}
+          >
+            Resume
+          </a>
+        </li>
         <!--
         <li class="col-span-2">
           <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
