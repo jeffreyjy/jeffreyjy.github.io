@@ -4,8 +4,8 @@ import { useMemo } from "react";
 export default function ClockBoardArt({
   boardColor = "#1C1C1C",
   faceColor = "#1A1A1A",
-  boardPadding = undefined,
-  style = undefined,
+  boardPadding = "",
+  style = {},
   inverted = false,
   handColor = "",
   behavior = "default",
@@ -42,13 +42,15 @@ export default function ClockBoardArt({
           ? counterBehavior
           : undefined;
   const behaviorProps = behaviorFn ? { behavior: behaviorFn } : {};
+  const boardPaddingProps = boardPadding ? { boardPadding } : {};
+  const styleProps = Object.keys(style).length > 0 ? { style } : {};
   return (
     <ClockBoard
       boardColor={boardColor}
       faceColor={faceColor}
-      boardPadding={boardPadding}
-      style={style}
       handColor={resolvedHandColor}
+      {...boardPaddingProps}
+      {...styleProps}
       {...behaviorProps}
     />
   );
