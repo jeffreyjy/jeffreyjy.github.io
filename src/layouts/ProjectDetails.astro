@@ -6,6 +6,7 @@ import Footer from "@/components/Footer.astro";
 import Tag from "@/components/Tag.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
+import ClockBoardArt from "@/components/ClockBoardArt";
 import { getProjectPath } from "@/utils/getProjectPath";
 import { slugifyStr } from "@/utils/slugify";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
@@ -124,7 +125,149 @@ const nextProject =
       id="article"
       class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
+      {
+        title === "ClockBoard" && (
+          <div class="not-prose mb-8 w-full overflow-hidden rounded-lg py-2">
+            <div class="flex h-[420px] w-full items-center">
+              <ClockBoardArt
+                boardColor="#FAFAFA"
+                faceColor="#F5F5F5"
+                boardPadding="40px 6%"
+                style={{ height: "100%", width: "100%" }}
+                inverted
+                behavior="random"
+                client:visible
+              />
+            </div>
+          </div>
+        )
+      }
       <Content />
+      {
+        title === "ClockBoard" && (
+          <div class="mt-8">
+            <h2>How to Use</h2>
+            <p>
+              ClockBoard is highly customizable: you can adjust colors, swap
+              behaviors, and fine-tune timing values to create very different
+              visual moods.
+            </p>
+            <h3>Color</h3>
+
+            <p>
+              You can customize the full color palette with `boardColor`,
+              `faceColor`, and `handColor`.
+            </p>
+            <pre><code>{`<ClockBoard
+  boardColor="#8F4128"
+  faceColor="#733926"
+  handColor="#F2F2F2"
+/>`}</code></pre>
+            <div class="not-prose mb-8 w-full overflow-hidden rounded-lg">
+              <div class="flex h-[380px] w-full items-center">
+                <ClockBoardArt
+                  boardColor="#8F4128"
+                  faceColor="#733926"
+                  boardPadding="40px 6%"
+                  style={{ height: "100%", width: "100%" }}
+                  handColor="#F2F2F2"
+                  behavior="clock"
+                  client:visible
+                />
+              </div>
+            </div>
+
+            <h3>Behavior</h3>
+            <p>
+              ClockBoard behavior is fully customizable through the `behavior`
+              prop.
+            </p>
+            <ul>
+              <li>
+                <code>clockRandom()</code> (default): shows current time each
+                minute, then transitions through random ambient patterns.
+              </li>
+              <li>
+                <code>clockCycle()</code>: same as `clockRandom`, but ambient
+                patterns run in fixed order.
+              </li>
+              <li>
+                <code>clock()</code>: time-only mode, updates at minute
+                boundaries.
+              </li>
+              <li>
+                <code>random()</code>: continuous random ambient patterns with
+                no time display.
+              </li>
+              <li>
+                <code>cycle()</code>: continuous ordered ambient patterns with
+                no time display.
+              </li>
+            </ul>
+            <p>
+              After picking a base behavior, you can tune timing values like
+              transition duration and hold time to change the feel.
+            </p>
+            <p>
+              This example runs random transitions with a short hold.
+            </p>
+            <pre><code>{`<ClockBoard
+  boardColor="#172F78"
+  faceColor="#162963"
+  handColor="#E2E8F0"
+  behavior={random(ALL_PATTERNS, 3000, 1000)}
+/>`}</code></pre>
+            <div class="not-prose mb-8 w-full overflow-hidden rounded-lg">
+              <div class="flex h-[380px] w-full items-center">
+                <ClockBoardArt
+                  boardColor="#172F78"
+                  faceColor="#162963"
+                  handColor="#E2E8F0"
+                  boardPadding="40px 6%"
+                  style={{ height: "100%", width: "100%" }}
+                  behavior="randomFast"
+                  client:visible
+                />
+              </div>
+            </div>
+
+            <p>
+              You can also define a custom behavior function. This one loops a
+              counter pattern from `00:00` to `99:99` with short animation and
+              rest timing.
+            </p>
+            <pre><code>{`const loopCounter = (apply) => {
+  let value = 0;
+  const tick = () => {
+    apply(composeTime(Math.floor(value / 100), value % 100), 450);
+    value = (value + 1) % 10000;
+  };
+  tick();
+  const id = setInterval(tick, 1000);
+  return () => clearInterval(id);
+};`}</code></pre>
+            <div class="not-prose mb-2 w-full overflow-hidden rounded-lg">
+              <div class="flex h-[380px] w-full items-center">
+                <ClockBoardArt
+                  handColor="#FADE84"
+                  boardPadding="40px 6%"
+                  style={{ height: "100%", width: "100%" }}
+                  behavior="counterLoop"
+                  client:visible
+                />
+              </div>
+            </div>
+
+            <h2>What's Next?</h2>
+            <ul>
+              <li>More built-in ambient patterns</li>
+              <li>A visual pattern builder tool</li>
+              <li>Grid dimension customization</li>
+              <li>Text display!</li>
+            </ul>
+          </div>
+        )
+      }
     </article>
 
     <hr class="my-8 border-dashed" />
@@ -134,6 +277,7 @@ const nextProject =
     </ul>
 
     <BackToTopButton />
+    <div class="clear-both"></div>
 
     <hr class="my-6 border-dashed" />
 

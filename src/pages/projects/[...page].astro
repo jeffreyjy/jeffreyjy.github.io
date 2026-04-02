@@ -12,7 +12,7 @@ import { SITE } from "@/config";
 
 export const getStaticPaths = (async ({ paginate }) => {
   const projects = await getCollection("projects", ({ data }) => !data.draft);
-  return paginate(getSortedProjects(projects), { pageSize: SITE.postPerPage });
+  return paginate(getSortedProjects(projects), { pageSize: 6 });
 }) satisfies GetStaticPaths;
 
 const { page } = Astro.props;
