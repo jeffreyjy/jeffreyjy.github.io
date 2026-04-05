@@ -135,7 +135,7 @@ const nextProject =
                 boardPadding="40px 6%"
                 style={{ height: "100%", width: "100%" }}
                 inverted
-                behavior="random"
+                behavior="randomHold10"
                 client:visible
               />
             </div>
@@ -159,15 +159,16 @@ const nextProject =
               `faceColor`, and `handColor`.
             </p>
             <pre><code>{`<ClockBoard
-  boardColor="#2E1914"
-  faceColor="#291712"
+  boardColor="linear-gradient(135deg, #3a3a3a, #141414)"
+  faceColor="#222222"
   handColor="#E8E0DF"
+  behavior="clock"
 />`}</code></pre>
             <div class="not-prose mb-8 w-full overflow-hidden rounded-lg">
               <div class="flex h-[380px] w-full items-center">
                 <ClockBoardArt
-                  boardColor="#2E1914"
-                  faceColor="#291712"
+                  boardColor="linear-gradient(135deg, #3a3a3a, #141414)"
+                  faceColor="#222222"
                   boardPadding="40px 6%"
                   style={{ height: "100%", width: "100%" }}
                   handColor="#E8E0DF"
@@ -215,7 +216,7 @@ const nextProject =
   boardColor="#192329"
   faceColor="#161D21"
   handColor="#E3E7E8"
-  behavior={random(ALL_PATTERNS, 3000, 1000)}
+  behavior={random(ALL_PATTERNS, 2000, 100)}
 />`}</code></pre>
             <div class="not-prose mb-8 w-full overflow-hidden rounded-lg">
               <div class="flex h-[380px] w-full items-center">
@@ -229,6 +230,33 @@ const nextProject =
                   client:visible
                 />
               </div>
+            </div>
+
+            <h3>Patterns</h3>
+            <p>13 built-in ambient patterns.</p>
+            <div class="not-prose mb-8 grid grid-cols-3 gap-1.5">
+              {
+                [
+                  "RADIAL",
+                  "CONVERGE",
+                  "CHECKERBOARD",
+                  "WAVE",
+                  "VORTEX",
+                  "RINGS",
+                  "BLOOM",
+                  "CHEVRONS",
+                  "WINDMILL",
+                ].map(name => (
+                  <div class="w-full overflow-hidden rounded-md" style="aspect-ratio: 20/8;">
+                    <ClockBoardArt
+                      patternName={name}
+                      boardPadding="6%"
+                      style={{ height: "100%", width: "100%" }}
+                      client:visible
+                    />
+                  </div>
+                ))
+              }
             </div>
 
             <p>

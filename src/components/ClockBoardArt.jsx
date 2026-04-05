@@ -1,5 +1,33 @@
-import { ALL_PATTERNS, ClockBoard, clock, clockRandom, composeTime, random } from "clockboard";
+import {
+  ALL_PATTERNS,
+  BLOOM,
+  CHECKERBOARD,
+  CHEVRONS,
+  ClockBoard,
+  CONVERGE,
+  RADIAL,
+  RINGS,
+  VORTEX,
+  WAVE,
+  WINDMILL,
+  clock,
+  clockRandom,
+  composeTime,
+  random,
+} from "clockboard";
 import { useMemo } from "react";
+
+const PATTERN_MAP = {
+  RADIAL,
+  CONVERGE,
+  CHECKERBOARD,
+  WAVE,
+  VORTEX,
+  RINGS,
+  BLOOM,
+  CHEVRONS,
+  WINDMILL,
+};
 
 export default function ClockBoardArt({
   boardColor = "#1C1C1C",
@@ -9,6 +37,7 @@ export default function ClockBoardArt({
   inverted = false,
   handColor = "",
   behavior = "default",
+  patternName = "",
 } = {}) {
   const resolvedHandColor = handColor || (inverted ? "#000000" : undefined);
 
@@ -36,12 +65,16 @@ export default function ClockBoardArt({
       ? clockRandom(undefined, undefined, undefined, undefined, 5000)
       : behavior === "random"
       ? random(ALL_PATTERNS)
+      : behavior === "randomHold10"
+      ? random(ALL_PATTERNS, 10000, 10)
       : behavior === "randomFast"
-        ? random(ALL_PATTERNS, 3000, 1000)
+        ? random(ALL_PATTERNS, 2000, 100)
         : behavior === "counterLoop"
           ? counterBehavior
           : undefined;
+  const resolvedPattern = patternName ? PATTERN_MAP[patternName] : undefined;
   const behaviorProps = behaviorFn ? { behavior: behaviorFn } : {};
+  const patternProps = resolvedPattern ? { pattern: resolvedPattern, duration: 0 } : {};
   const boardPaddingProps = boardPadding ? { boardPadding } : {};
   const styleProps = Object.keys(style).length > 0 ? { style } : {};
   return (
@@ -51,7 +84,7 @@ export default function ClockBoardArt({
       handColor={resolvedHandColor}
       {...boardPaddingProps}
       {...styleProps}
-      {...behaviorProps}
+      {...(resolvedPattern ? patternProps : behaviorProps)}
     />
   );
 }

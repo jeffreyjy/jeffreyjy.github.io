@@ -24,8 +24,8 @@ importers:
         specifier: ^5.16.6
         version: 5.16.6(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.60.1)(typescript@5.9.3)(yaml@2.7.1)
       clockboard:
-        specifier: ^0.0.1
-        version: 0.0.1(react@19.2.4)
+        specifier: ^0.1.0
+        version: 0.1.0(react@19.2.4)
       dayjs:
         specifier: ^1.11.19
         version: 1.11.19
@@ -1506,8 +1506,8 @@ packages:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
 
-  clockboard@0.0.1:
-    resolution: {integrity: sha512-BDvoKihsThe/FlfVPWfhDSZ+vMeXZ/R4wDlwhZGM9cI6zfLPc/XzGn1TzLXbF13t4fap3ijVFE2nqq9/xcQlmg==}
+  clockboard@0.1.0:
+    resolution: {integrity: sha512-X26VHsg6erEra/Sx21Cb1DejjUmZcWoE0ZB7yardYZuE39u54bNbn0hiNw8T+7xhS9SUzSC9Kxp4uaKNs5IFdw==}
     peerDependencies:
       react: '>=18'
 
@@ -4639,7 +4639,7 @@ snapshots:
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
 
-  clockboard@0.0.1(react@19.2.4):
+  clockboard@0.1.0(react@19.2.4):
     dependencies:
       react: 19.2.4
 

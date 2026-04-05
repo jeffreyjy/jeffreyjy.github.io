@@ -7,17 +7,16 @@ tags:
   - web-development
   - react
   - creative-coding
-description: A React clock-wall art component with animated pattern transitions.
+description: A canvas-rendered React component that animates a 20×8 wall of analog clocks through ambient patterns, time display, and custom behaviors.
 githubUrl: https://github.com/jeffreyjy/clockboard
 techStack:
   - React
-  - JavaScript
-  - SVG
-  - Web Animations API
+  - TypeScript
+  - Canvas
 ---
 
 
-ClockBoard is a React component that renders a 20x8 wall of analog clocks and synchronizes their hands to create animated visual patterns over time. The grid can display ambient motion, stylized digit layouts, and time-based compositions while preserving smooth animation performance in the browser.
+ClockBoard is a canvas-rendered React component that drives a 20×8 wall of analog clocks at 60fps — zero CSS imports. The grid cycles through ambient patterns, displays the current time, and supports fully custom behavior functions.
 
 It may look familiar to frequent flyers from the Bay Area...
 
