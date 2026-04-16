@@ -100,8 +100,8 @@ const isActive = (path: string) => {
         </li>
 
         <li class="col-span-2 hidden sm:list-item">
-          <a href="/frog" class:list={{ "active-nav": isActive("/frog") }}>
-            🐸
+          <a href="/frog" class:list={["relative", { "active-nav": isActive("/frog") }]}>
+            🐸<span class:list={["frog-cursor", { "frog-cursor-active": isActive("/frog") }]}></span>
           </a>
         </li>
         <!--
@@ -170,6 +170,27 @@ const isActive = (path: string) => {
     </nav>
   </div>
 </header>
+
+<style>
+  .frog-cursor {
+    position: absolute;
+    right: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1em;
+    background: transparent;
+    pointer-events: none;
+  }
+  .frog-cursor-active {
+    background: white;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
 
 <script>
   function toggleNav() {

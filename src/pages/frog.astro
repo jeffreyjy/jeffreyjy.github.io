@@ -98,12 +98,30 @@ const allText = [
     video.loop = true;
     video.src = "/assets/videos/frog.mp4";
 
+    const audio = new Audio("/assets/audio/frogs.mp3");
+    audio.loop = true;
+    const playAudio = () => {
+      audio.play().catch(() => {
+        // Autoplay blocked — wait for first interaction
+        const resume = () => {
+          audio.play();
+          document.removeEventListener("click", resume);
+          document.removeEventListener("keydown", resume);
+        };
+        document.addEventListener("click", resume, { once: false });
+        document.addEventListener("keydown", resume, { once: false });
+      });
+    };
+    playAudio();
+
     let videoReady = false;
     let animFrameId = 0;
     let cols = 0;
     let rows = 0;
     let cellW = 0;
     let charGrid: string[] = [];
+    let typedText = "";
+    let currentText = TEXT;
 
     function measureCellWidth() {
       ctx.font = FONT;
@@ -116,7 +134,7 @@ const allText = [
       rows = Math.floor(rect.height / LINE_HEIGHT);
       if (cols <= 0 || rows <= 0) return;
 
-      const prepared = prepareWithSegments(TEXT, FONT);
+      const prepared = prepareWithSegments(currentText, FONT);
       charGrid = new Array(rows * cols).fill(" ");
       let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 };
 
@@ -192,6 +210,20 @@ const allText = [
       }
     }
 
+    function rebuildGrid() {
+      const totalChars = cols * rows;
+      if (totalChars <= 0) return;
+      currentText = typedText.repeat(Math.ceil(totalChars / typedText.length));
+      layoutTextGrid();
+    }
+
+    function handleKeydown(e: KeyboardEvent) {
+      if (e.key.length !== 1 || e.key === " ") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      typedText += e.key;
+      rebuildGrid();
+    }
+
     function handleResize() {
       const hBottom = header ? header.getBoundingClientRect().bottom : 0;
       canvas.style.height = (window.innerHeight - hBottom) + "px";
@@ -220,6 +252,7 @@ const allText = [
     }, { once: true });
 
     window.addEventListener("resize", handleResize);
+    document.addEventListener("keydown", handleKeydown);
 
     const observer = new MutationObserver(() => render());
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -229,8 +262,11 @@ const allText = [
       cancelAnimationFrame(animFrameId);
       video.pause();
       video.src = "";
+      audio.pause();
+      audio.src = "";
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("keydown", handleKeydown);
       // Restore previous theme
       if (prevTheme) {
         document.documentElement.setAttribute("data-theme", prevTheme);
