@@ -114,8 +114,12 @@ const allText = [
     };
     playAudio();
 
+    let posterReady = false;
     let videoReady = false;
     let animFrameId = 0;
+
+    const poster = new Image();
+    poster.src = "/assets/images/frog-poster.png";
     let cols = 0;
     let rows = 0;
     let cellW = 0;
@@ -167,14 +171,21 @@ const allText = [
     function render() {
       const { bg, textColor } = getThemeColors();
 
-      // Don't draw text until video is ready
-      if (!videoReady || video.readyState < 2) {
+      // Need at least the poster to render
+      if (!posterReady && !videoReady) {
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         return;
       }
 
-      videoCtx.drawImage(video, 0, 0, cols, rows);
+      if (cols <= 0 || rows <= 0) return;
+
+      // Use live video if ready, otherwise fall back to poster
+      if (videoReady && video.readyState >= 2) {
+        videoCtx.drawImage(video, 0, 0, cols, rows);
+      } else {
+        videoCtx.drawImage(poster, 0, 0, cols, rows);
+      }
       const vPix = videoCtx.getImageData(0, 0, cols, rows).data;
       const rect = canvas.getBoundingClientRect();
 
@@ -243,12 +254,24 @@ const allText = [
       animFrameId = requestAnimationFrame(frame);
     }
 
-    // Wait for video before rendering anything
+    // Start rendering as soon as poster loads
+    poster.addEventListener("load", () => {
+      posterReady = true;
+      handleResize();
+      animFrameId = requestAnimationFrame(frame);
+    }, { once: true });
+
+    // If poster was cached and already loaded
+    if (poster.complete) {
+      posterReady = true;
+      handleResize();
+      animFrameId = requestAnimationFrame(frame);
+    }
+
+    // Swap to live video when ready
     video.addEventListener("canplay", () => {
       videoReady = true;
       video.play();
-      handleResize();
-      animFrameId = requestAnimationFrame(frame);
     }, { once: true });
 
     window.addEventListener("resize", handleResize);
