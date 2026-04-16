@@ -254,19 +254,15 @@ const allText = [
       animFrameId = requestAnimationFrame(frame);
     }
 
-    // Start rendering as soon as poster loads
-    poster.addEventListener("load", () => {
-      posterReady = true;
-      handleResize();
-      animFrameId = requestAnimationFrame(frame);
-    }, { once: true });
-
-    // If poster was cached and already loaded
-    if (poster.complete) {
+    function startRendering() {
+      if (posterReady) return; // already started
       posterReady = true;
       handleResize();
       animFrameId = requestAnimationFrame(frame);
     }
+
+    poster.addEventListener("load", startRendering, { once: true });
+    if (poster.complete) startRendering();
 
     // Swap to live video when ready
     video.addEventListener("canplay", () => {
