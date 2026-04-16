@@ -72,12 +72,6 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
-          <a href="/frog" class:list={{ "active-nav": isActive("/frog") }}>
-            🐸
-          </a>
-        </li>
-
-        <li class="col-span-2">
           <a href="/" class:list={{ "active-nav": isActive("/") }}>
             Home
           </a>
@@ -102,6 +96,12 @@ const isActive = (path: string) => {
             rel="noopener noreferrer"
           >
             Resume
+          </a>
+        </li>
+
+        <li class="col-span-2">
+          <a href="/frog" class:list={{ "active-nav": isActive("/frog") }}>
+            🐸
           </a>
         </li>
         <!--
