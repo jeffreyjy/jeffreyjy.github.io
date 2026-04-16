@@ -216,17 +216,15 @@ const allText = [
       animFrameId = requestAnimationFrame(frame);
     }
 
-    // Start video playback and animation loop
+    // Wait for video before rendering anything
     video.addEventListener("canplay", () => {
       videoReady = true;
       video.play();
+      handleResize();
+      animFrameId = requestAnimationFrame(frame);
     }, { once: true });
 
     window.addEventListener("resize", handleResize);
-    handleResize();
-
-    // Start the render loop
-    animFrameId = requestAnimationFrame(frame);
 
     const observer = new MutationObserver(() => render());
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
