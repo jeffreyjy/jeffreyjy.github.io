@@ -35,7 +35,7 @@ const allText = [
   homeCopy,
   ...blogs.map(b => `${b.data.title}. ${b.data.description} ${stripMarkdown(b.body ?? "")}`),
   ...projects.map(p => `${p.data.title}. ${p.data.description} ${stripMarkdown(p.body ?? "")}`),
-].join(" ");
+].join(" ").repeat(3);
 ---
 
 <Layout title="🐸">
