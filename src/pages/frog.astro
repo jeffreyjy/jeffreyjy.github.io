@@ -1,0 +1,249 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { getCollection } from "astro:content";
+
+// Pull all non-draft blog posts and projects at build time
+const blogs = await getCollection("blog", ({ data }) => !data.draft);
+const projects = await getCollection("projects", ({ data }) => !data.draft);
+
+// Strip markdown/HTML syntax to plain text
+function stripMarkdown(md: string): string {
+  return md
+    .replace(/^---[\s\S]*?---/m, "")        // frontmatter
+    .replace(/```[\s\S]*?```/g, "")          // code blocks
+    .replace(/`[^`]+`/g, "")                // inline code
+    .replace(/!\[.*?\]\(.*?\)/g, "")         // images
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // links → text
+    .replace(/<[^>]+>/g, "")                 // HTML tags
+    .replace(/^#{1,6}\s+/gm, "")            // headings
+    .replace(/[*_~]{1,3}/g, "")             // bold/italic/strikethrough
+    .replace(/^[\s]*[-*+]\s+/gm, " ")       // list items
+    .replace(/^[\s]*\d+\.\s+/gm, " ")       // ordered list items
+    .replace(/^>\s+/gm, "")                 // blockquotes
+    .replace(/\n{2,}/g, " ")                // collapse multiple newlines
+    .replace(/\n/g, " ")                    // remaining newlines
+    .replace(/\s{2,}/g, " ")               // collapse whitespace
+    .trim();
+}
+
+// Home page copy
+const homeCopy = "Jeffrey Yang. I am a first-year M.S. student studying Computer Science at UC San Diego. I previously completed my undergraduate studies at UC San Diego in Cognitive Science with a specialization in machine learning. My interests focus on software engineering for machine learning systems, with an emphasis on integrating modern models into reliable, production-grade applications. When I'm not programming, you can find me in the gym weightlifting or training MMA. I'm currently building a startup to automate personal training for gyms.";
+
+// Gather all text: home copy, blog titles/descriptions/bodies, project titles/descriptions/bodies
+const allText = [
+  homeCopy,
+  ...blogs.map(b => `${b.data.title}. ${b.data.description} ${stripMarkdown(b.body ?? "")}`),
+  ...projects.map(p => `${p.data.title}. ${p.data.description} ${stripMarkdown(p.body ?? "")}`),
+].join(" ");
+---
+
+<Layout title="🐸">
+  <Header />
+  <main id="main-content" class="frog-main">
+    <canvas id="frog-canvas"></canvas>
+  </main>
+</Layout>
+
+<style is:global>
+  html:has(.frog-main) {
+    overflow: hidden;
+  }
+</style>
+
+<style>
+  .frog-main {
+    overflow: hidden;
+  }
+  #frog-canvas {
+    width: 100%;
+    display: block;
+  }
+</style>
+
+<script define:vars={{ allText }}>
+  window.__FROG_TEXT__ = allText;
+</script>
+
+<script>
+  import { prepareWithSegments, layoutNextLine, type LayoutCursor } from "@chenglou/pretext";
+
+  const FONT_SIZE = 14;
+  const LINE_HEIGHT = FONT_SIZE;
+  const FONT = `${FONT_SIZE}px "Courier New", Courier, monospace`;
+
+  // Video tint colors
+  const VID_R = 100;
+  const VID_G = 180;
+  const VID_B = 120;
+
+  function initFrog() {
+    const canvas = document.getElementById("frog-canvas") as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d")!;
+    const TEXT = (window as any).__FROG_TEXT__ as string;
+    if (!TEXT) return;
+
+    // Force dark theme on frog page
+    const prevTheme = document.documentElement.getAttribute("data-theme");
+    document.documentElement.setAttribute("data-theme", "dark");
+
+    // Size canvas to fill from header bottom to viewport bottom
+    const header = document.querySelector("header");
+
+    const videoCanvas = document.createElement("canvas");
+    const videoCtx = videoCanvas.getContext("2d", { willReadFrequently: true })!;
+
+    const video = document.createElement("video");
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+    video.loop = true;
+    video.src = "/assets/videos/frog.mp4";
+
+    let videoReady = false;
+    let animFrameId = 0;
+    let cols = 0;
+    let rows = 0;
+    let cellW = 0;
+    let charGrid: string[] = [];
+
+    function measureCellWidth() {
+      ctx.font = FONT;
+      cellW = ctx.measureText("M").width;
+    }
+
+    function layoutTextGrid() {
+      const rect = canvas.getBoundingClientRect();
+      cols = Math.floor(rect.width / cellW);
+      rows = Math.floor(rect.height / LINE_HEIGHT);
+      if (cols <= 0 || rows <= 0) return;
+
+      const prepared = prepareWithSegments(TEXT, FONT);
+      charGrid = new Array(rows * cols).fill(" ");
+      let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 };
+
+      for (let row = 0; row < rows; row++) {
+        let line = layoutNextLine(prepared, cursor, cols * cellW);
+        if (line === null) {
+          cursor = { segmentIndex: 0, graphemeIndex: 0 };
+          line = layoutNextLine(prepared, cursor, cols * cellW);
+          if (line === null) break;
+        }
+
+        for (let col = 0; col < cols && col < line.text.length; col++) {
+          charGrid[row * cols + col] = line.text[col];
+        }
+        cursor = line.end;
+      }
+
+      videoCanvas.width = cols;
+      videoCanvas.height = rows;
+    }
+
+    function getThemeColors() {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      return {
+        bg: isDark ? "#000000" : "#f5f5f5",
+        textColor: isDark ? "rgba(255, 255, 255, 0.6)" : "rgba(40, 40, 60, 0.35)",
+      };
+    }
+
+    function render() {
+      let vPix: Uint8ClampedArray | null = null;
+      if (video.readyState >= 2 && videoReady) {
+        videoCtx.drawImage(video, 0, 0, cols, rows);
+        vPix = videoCtx.getImageData(0, 0, cols, rows).data;
+      }
+
+      const { bg, textColor } = getThemeColors();
+      const rect = canvas.getBoundingClientRect();
+
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = FONT;
+      ctx.textBaseline = "top";
+
+      const offsetX = (rect.width - cols * cellW) / 2;
+      const offsetY = (rect.height - rows * LINE_HEIGHT) / 2;
+
+      for (let row = 0; row < rows; row++) {
+        const y = offsetY + row * LINE_HEIGHT;
+        for (let col = 0; col < cols; col++) {
+          const ch = charGrid[row * cols + col];
+          if (ch === " ") continue;
+
+          if (vPix) {
+            const idx = (row * cols + col) * 4;
+            const lum =
+              (0.299 * vPix[idx] + 0.587 * vPix[idx + 1] + 0.114 * vPix[idx + 2]) / 255;
+
+            const THRESHOLD = 0.08;
+            if (lum < THRESHOLD) continue;
+            const t = (lum - THRESHOLD) / (1 - THRESHOLD);
+            const alpha = Math.pow(t, 0.6);
+
+            const r = Math.round(VID_R + (255 - VID_R) * t);
+            const g = Math.round(VID_G + (255 - VID_G) * t);
+            const b = Math.round(VID_B + (255 - VID_B) * t);
+            ctx.fillStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
+          } else {
+            ctx.fillStyle = textColor;
+          }
+          ctx.fillText(ch, offsetX + col * cellW, y);
+        }
+      }
+    }
+
+    function handleResize() {
+      const hBottom = header ? header.getBoundingClientRect().bottom : 0;
+      canvas.style.height = (window.innerHeight - hBottom) + "px";
+
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      measureCellWidth();
+      layoutTextGrid();
+      render();
+    }
+
+    function frame() {
+      render();
+      animFrameId = requestAnimationFrame(frame);
+    }
+
+    // Start video playback and animation loop
+    video.addEventListener("canplay", () => {
+      videoReady = true;
+      video.play();
+    }, { once: true });
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    // Start the render loop
+    animFrameId = requestAnimationFrame(frame);
+
+    const observer = new MutationObserver(() => render());
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+    // Clean up on page transition
+    document.addEventListener("astro:before-swap", () => {
+      cancelAnimationFrame(animFrameId);
+      video.pause();
+      video.src = "";
+      observer.disconnect();
+      window.removeEventListener("resize", handleResize);
+      // Restore previous theme
+      if (prevTheme) {
+        document.documentElement.setAttribute("data-theme", prevTheme);
+      }
+    }, { once: true });
+  }
+
+  initFrog();
+  document.addEventListener("astro:page-load", initFrog);
+</script>
