@@ -135,7 +135,7 @@ const nextProject =
                 boardPadding="40px 6%"
                 style={{ height: "100%", width: "100%" }}
                 inverted
-                behavior="randomHold10"
+                behavior="alive"
                 client:visible
               />
             </div>
@@ -146,24 +146,16 @@ const nextProject =
       {
         title === "ClockBoard" && (
           <div class="mt-8">
-            <h2>How to Use</h2>
-            <p>
-              ClockBoard is highly customizable: you can adjust colors, swap
-              behaviors, and fine-tune timing values to create very different
-              visual moods.
-            </p>
-            <h3>Color</h3>
+            <h2>Capabilities</h2>
 
+            <h3>Generative Behaviors</h3>
             <p>
-              You can customize the full color palette with `boardColor`,
-              `faceColor`, and `handColor`.
+              The default <code>aliveTime()</code> behavior cycles through three moods — drifting between ambient patterns, spinning with stagger effects, and displaying the time whenever the minute changes. Every viewing is different.
             </p>
-            <pre><code>{`<ClockBoard
-  boardColor="linear-gradient(135deg, #3a3a3a, #141414)"
-  faceColor="#222222"
-  handColor="#E8E0DF"
-  behavior="clock"
-/>`}</code></pre>
+            <p>
+              Other built-in behaviors include <code>concentricDance()</code>, <code>gentleDrift()</code>, <code>clock()</code>, and more.
+            </p>
+
             <div class="not-prose mb-8 w-full overflow-hidden rounded-lg">
               <div class="flex h-[380px] w-full items-center">
                 <ClockBoardArt
@@ -172,52 +164,31 @@ const nextProject =
                   boardPadding="40px 6%"
                   style={{ height: "100%", width: "100%" }}
                   handColor="#E8E0DF"
-                  behavior="clock"
+                  behavior="concentricDance"
                   client:visible
                 />
               </div>
             </div>
 
-            <h3>Behavior</h3>
+            <h3>Spin Animations</h3>
             <p>
-              ClockBoard behavior is fully customizable through the `behavior`
-              prop.
+              Clocks can spin with stagger delays, creating wave-like effects that ripple across the board. Hands can spin in the same direction, opposite directions, or split apart. Spin reveals land smoothly on a target pattern.
             </p>
-            <ul>
-              <li>
-                <code>clockRandom()</code> (default): shows current time each
-                minute, then transitions through random ambient patterns.
-              </li>
-              <li>
-                <code>clockCycle()</code>: same as `clockRandom`, but ambient
-                patterns run in fixed order.
-              </li>
-              <li>
-                <code>clock()</code>: time-only mode, updates at minute
-                boundaries.
-              </li>
-              <li>
-                <code>random()</code>: continuous random ambient patterns with
-                no time display.
-              </li>
-              <li>
-                <code>cycle()</code>: continuous ordered ambient patterns with
-                no time display.
-              </li>
-            </ul>
+            <div class="not-prose mb-8 w-full overflow-hidden rounded-lg">
+              <div class="flex h-[380px] w-full items-center">
+                <ClockBoardArt
+                  boardPadding="40px 6%"
+                  style={{ height: "100%", width: "100%" }}
+                  behavior="spinReveal"
+                  client:visible
+                />
+              </div>
+            </div>
+
+            <h3>Color</h3>
             <p>
-              After picking a base behavior, you can tune timing values like
-              transition duration and hold time to change the feel.
+              Fully customizable palette with <code>boardColor</code>, <code>faceColor</code>, and <code>handColor</code>. Board backgrounds support CSS gradients.
             </p>
-            <p>
-              This example runs random transitions with a short hold.
-            </p>
-            <pre><code>{`<ClockBoard
-  boardColor="#192329"
-  faceColor="#161D21"
-  handColor="#E3E7E8"
-  behavior={random(ALL_PATTERNS, 2000, 100)}
-/>`}</code></pre>
             <div class="not-prose mb-8 w-full overflow-hidden rounded-lg">
               <div class="flex h-[380px] w-full items-center">
                 <ClockBoardArt
@@ -226,14 +197,14 @@ const nextProject =
                   handColor="#E3E7E8"
                   boardPadding="40px 6%"
                   style={{ height: "100%", width: "100%" }}
-                  behavior="randomFast"
+                  behavior="gentleDrift"
                   client:visible
                 />
               </div>
             </div>
 
             <h3>Patterns</h3>
-            <p>13 built-in ambient patterns.</p>
+            <p>14 built-in ambient patterns, plus tools to create your own.</p>
             <div class="not-prose mb-8 grid grid-cols-3 gap-1.5">
               {
                 [
@@ -259,21 +230,18 @@ const nextProject =
               }
             </div>
 
+            <h3>Composable</h3>
             <p>
-              You can also define a custom behavior function. This one loops a
-              counter pattern from `00:00` to `99:99` with short animation and
-              rest timing.
+              Build custom behaviors by composing steps declaratively. Mix pattern transitions, spins, spin reveals, holds, and stagger effects freely.
             </p>
-            <pre><code>{`const loopCounter = (apply) => {
-  let value = 0;
-  const tick = () => {
-    apply(composeTime(Math.floor(value / 100), value % 100), 450);
-    value = (value + 1) % 10000;
-  };
-  tick();
-  const id = setInterval(tick, 1000);
-  return () => clearInterval(id);
-};`}</code></pre>
+            <pre><code>{`import { sequence, uniformPattern, composeTime, stagger, RADIAL } from 'clockboard'
+
+const reveal = sequence([
+  { pattern: uniformPattern(0, 180), duration: 3000 },
+  { pattern: composeTime(14, 30), spinRevolutions: 2, revolutionDuration: 5000, hold: 5000 },
+  { pattern: RADIAL, duration: 5000, stagger: stagger.centerOut(1500) },
+])`}</code></pre>
+
             <div class="not-prose mb-2 w-full overflow-hidden rounded-lg">
               <div class="flex h-[380px] w-full items-center">
                 <ClockBoardArt
@@ -285,14 +253,6 @@ const nextProject =
                 />
               </div>
             </div>
-
-            <h2>What's Next?</h2>
-            <ul>
-              <li>More built-in ambient patterns</li>
-              <li>A visual pattern builder tool</li>
-              <li>Grid dimension customization</li>
-              <li>Text display!</li>
-            </ul>
           </div>
         )
       }

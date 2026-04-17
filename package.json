@@ -20,7 +20,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
-    "clockboard": "^0.1.0",
+    "clockboard": "^1.0.0",
     "dayjs": "^1.11.19",
     "lodash.kebabcase": "^4.1.1",
     "react": "^19.2.4",

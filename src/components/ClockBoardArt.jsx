@@ -3,17 +3,24 @@ import {
   BLOOM,
   CHECKERBOARD,
   CHEVRONS,
-  ClockBoard,
   CONVERGE,
+  INWARD,
   RADIAL,
   RINGS,
   VORTEX,
   WAVE,
   WINDMILL,
+  ClockBoard,
+  alive,
+  aliveTime,
   clock,
   clockRandom,
-  composeTime,
+  concentricDance,
+  gentleDrift,
   random,
+  composeTime,
+  stagger,
+  uniformPattern,
 } from "clockboard";
 import { useMemo } from "react";
 
@@ -27,6 +34,7 @@ const PATTERN_MAP = {
   BLOOM,
   CHEVRONS,
   WINDMILL,
+  INWARD,
 };
 
 export default function ClockBoardArt({
@@ -47,7 +55,10 @@ export default function ClockBoardArt({
       const tick = () => {
         const hours = Math.floor(value / 100);
         const minutes = value % 100;
-        apply(composeTime(hours, minutes), 450);
+        apply(composeTime(hours, minutes), {
+          duration: 450,
+          onComplete: () => {},
+        });
         value = (value + 1) % 10000;
       };
 
@@ -58,23 +69,53 @@ export default function ClockBoardArt({
     []
   );
 
+  const spinRevealBehavior = useMemo(
+    () => apply => {
+      const start = uniformPattern(0, 180);
+      const time = composeTime(new Date().getHours(), new Date().getMinutes());
+      apply(start, {
+        duration: 3000,
+        onComplete: () => {
+          apply(time, {
+            spinRevolutions: 2,
+            revolutionDuration: 5000,
+            stagger: stagger.centerOut(1500),
+          });
+        },
+      });
+      return () => {};
+    },
+    []
+  );
+
   const behaviorFn =
-    behavior === "clock"
-      ? clock()
-      : behavior === "homeClockRandom"
-      ? clockRandom(undefined, undefined, undefined, undefined, 5000)
-      : behavior === "random"
-      ? random(ALL_PATTERNS)
-      : behavior === "randomHold10"
-      ? random(ALL_PATTERNS, 10000, 10)
-      : behavior === "randomFast"
-        ? random(ALL_PATTERNS, 2000, 100)
-        : behavior === "counterLoop"
-          ? counterBehavior
-          : undefined;
+    behavior === "aliveTime"
+      ? aliveTime()
+      : behavior === "alive"
+        ? alive()
+        : behavior === "clock"
+          ? clock()
+          : behavior === "clockRandom"
+            ? clockRandom()
+            : behavior === "concentricDance"
+              ? concentricDance()
+              : behavior === "gentleDrift"
+                ? gentleDrift()
+                : behavior === "random"
+                  ? random(ALL_PATTERNS)
+                  : behavior === "randomFast"
+                    ? random(ALL_PATTERNS, 2000, 100)
+                    : behavior === "spinReveal"
+                      ? spinRevealBehavior
+                      : behavior === "counterLoop"
+                        ? counterBehavior
+                        : undefined;
+
   const resolvedPattern = patternName ? PATTERN_MAP[patternName] : undefined;
   const behaviorProps = behaviorFn ? { behavior: behaviorFn } : {};
-  const patternProps = resolvedPattern ? { pattern: resolvedPattern, duration: 0 } : {};
+  const patternProps = resolvedPattern
+    ? { pattern: resolvedPattern, duration: 0 }
+    : {};
   const boardPaddingProps = boardPadding ? { boardPadding } : {};
   const styleProps = Object.keys(style).length > 0 ? { style } : {};
   return (
