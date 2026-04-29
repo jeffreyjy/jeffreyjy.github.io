@@ -39,6 +39,9 @@ const allText = [
 ---
 
 <Layout title="🐸">
+  <Fragment slot="head">
+    <link rel="preload" as="video" href="/assets/videos/frog.mp4" type="video/mp4" />
+  </Fragment>
   <Header />
   <main id="main-content" class="frog-main">
     <canvas id="frog-canvas" data-text={allText}></canvas>
